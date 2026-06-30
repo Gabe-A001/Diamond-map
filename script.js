@@ -44,7 +44,8 @@ fetch("beamlines_data.json")
             console.log(beamlines_group["name"])
             for(let beamline of beamlines_group["beamlines"]){
                 console.log(beamline["position"])
-                var marker = L.marker(beamline["position"]).addTo(map);}
+                var marker = L.marker(beamline["position"]).addTo(map);
+            marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`).openPopup();}
         }
     })
         
