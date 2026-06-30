@@ -22,7 +22,7 @@ var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
 }).addTo(map);
 
 var imageUrl = "BaseOver.png";
-var altText = 'Image of Newark, N.J. in 1922. Source: The University of Texas at Austin, UT Libraries Map Collection.';
+var altText = 'Image of Diamond light source';
 var latLngBounds = L.latLngBounds([[51.57168183170403, -1.3173294067382815], [51.57701619673675, -1.304454803466797]]);
 
 var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
@@ -54,7 +54,7 @@ var myIcon = L.icon({
     iconAnchor: [22, 49],
     popupAnchor: [-3, -35],
 });
-map.locate({setView: true, maxZoom: 16});
+map.locate({setView: true, maxZoom: 16}, watch= true);
 function onLocationFound(e) {
     var radius = e.accuracy;
 
