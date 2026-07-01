@@ -54,7 +54,7 @@ var myIcon = L.icon({
     iconAnchor: [22, 49],
     popupAnchor: [-3, -35],
 });
-map.locate({setView: true, maxZoom: 16, watch: true});
+map.locate({setView: false, maxZoom: 16, watch: true});
 function onLocationFound(e) {
     var radius = e.accuracy;
 
