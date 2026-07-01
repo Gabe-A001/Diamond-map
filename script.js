@@ -30,6 +30,14 @@ var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
     alt: altText,
     interactive: true
 }).addTo(map);
+var colours=["https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-black.png?raw=true",
+                "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-gold.png?raw=true",
+                "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-green.png?raw=true",
+                "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-red.png?raw=true",
+                "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-violet.png?raw=true",
+                "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-yellow.png?raw=true",
+                "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-grey.png?raw=true",
+                "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-blue.png?raw=true"]
 fetch("beamlines_data.json")
     .then(response => {
         if(response.ok){
@@ -41,20 +49,28 @@ fetch("beamlines_data.json")
     })
     .then(data => {
         var overlayMaps={}
-        for(let beamlines_group of data){
+        for(let [index, beamlines_group] of data.entries()){
             console.log(beamlines_group["name"])
+            console.log(colours[index])
             var emptyGroup=[]
-
+            var greenIcon = new L.Icon({
+            iconUrl: colours[index],
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34]
+            });
             for(let beamline of beamlines_group["beamlines"]){
                 console.log(beamline["position"])
-                var marker = L.marker(beamline["position"]).addTo(map);
+                var marker = L.marker(beamline["position"], {icon: greenIcon}).addTo(map);
                 emptyGroup.push(marker)
+
+
                 marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`).openPopup();}
         var layers=L.layerGroup(emptyGroup)
         layers.addTo(map)
         overlayMaps[beamlines_group["name"]]=layers
+            }
     
-    }
     var layerControl=L.control.layers(null, overlayMaps).addTo(map)
     })
 var myIcon = L.icon({
