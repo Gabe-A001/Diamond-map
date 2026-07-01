@@ -56,7 +56,7 @@ var myIcon = L.icon({
 });
 map.locate({setView: true, maxZoom: 16, watch: true});
 var locationAccuracy=L.circle([51.574349, -1.310892], 0).addTo(map);
-var iconMarker= L.marker(e.latlng ,{icon: myIcon}).addTo(map)
+var iconMarker= L.marker([51.574349, -1.310892] ,{icon: myIcon}).addTo(map)
 function onLocationFound(e) {
     var radius = e.accuracy;
 
