@@ -40,13 +40,22 @@ fetch("beamlines_data.json")
         }
     })
     .then(data => {
+        var overlayMaps={}
         for(let beamlines_group of data){
             console.log(beamlines_group["name"])
+            var emptyGroup=[]
+
             for(let beamline of beamlines_group["beamlines"]){
                 console.log(beamline["position"])
                 var marker = L.marker(beamline["position"]).addTo(map);
-            marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`).openPopup();}
-        }
+                emptyGroup.push(marker)
+                marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`).openPopup();}
+        var layers=L.layerGroup(emptyGroup)
+        layers.addTo(map)
+        overlayMaps[beamlines_group["name"]]=layers
+    
+    }
+    var layerControl=L.control.layers(null, overlayMaps).addTo(map)
     })
 var myIcon = L.icon({
     iconUrl: 'location icon.png',
