@@ -55,13 +55,14 @@ var myIcon = L.icon({
     popupAnchor: [-3, -35],
 });
 map.locate({setView: true, maxZoom: 16, watch: true});
+var locationAccuracy=L.circle([51.574349, -1.310892], 0).addTo(map);
 function onLocationFound(e) {
     var radius = e.accuracy;
 
     L.marker(e.latlng ,{icon: myIcon}).addTo(map)
         .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-    L.circle(e.latlng, radius).addTo(map);
+    locationAccuracy.setLatLng(e.latlng)
+    locationAccuracy.setRadius(radius)
 }
 
 map.on('locationfound', onLocationFound);
