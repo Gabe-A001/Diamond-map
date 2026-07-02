@@ -67,8 +67,8 @@ fetch("beamlines_data.json")
                 emptyGroup.push(marker)
                 beamlinemarkers[beamline["name"]]=marker 
 
-                //Adding a popup to the markers
-                marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`).openPopup();}
+                //Adding a popup to the markers and ensuring they stay in view when searched for
+                marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`, {keepInView: true}).openPopup();}
         //Adding different coloured markers for each beamline group
         var layers=L.layerGroup(emptyGroup)
         layers.addTo(map)
@@ -123,8 +123,21 @@ searchBox.addEventListener("keydown", e => {
     console.log(e)
     if (e.code === "Enter") {
         var searchQuery = searchBox.value
+        searchQuery = searchQuery.toUpperCase()
+
+        if (searchQuery === "EBIC") {
+            searchQuery = "eBIC"
+        }
+
         console.log(searchQuery)
-        let markersearchedfor = beamlinemarkers[searchQuery]
-        markersearchedfor.openPopup()
+        console.log(beamlinemarkers[searchQuery])
+        if (beamlinemarkers[searchQuery] === undefined) {
+            alert("Beamline does not exist");
+        }
+        else {
+            let markersearchedfor = beamlinemarkers[searchQuery]
+            markersearchedfor.openPopup()
+            map.setView(markersearchedfor.getLatLng())
+        }
     }
 });
