@@ -141,3 +141,5 @@ searchBox.addEventListener("keydown", e => {
         }
     }
 });
+const mousePosition = new MousePosition({ position: "bottomleft" });
+mousePosition.addTo(map);
