@@ -1,35 +1,30 @@
-function sendAlert(){
-let num1=6
-let num2=7
-let totalNum=num1 + num2
-let text="i have "+ totalNum + " alerts"
-    alert(text)
-}
+//Adding the map to the webpage and setting the view to diamond building
 var map = L.map('map').setView([51.574349, -1.310892], 16);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+//Adding a marker for diamond building at the center of the building
 var marker = L.marker([51.574349, -1.310892]).addTo(map);
+//Adding the base that shows the location of different zones
 var imageUrl = "BaseUnder.png";
-var altText = 'Image of Newark, N.J. in 1922. Source: The University of Texas at Austin, UT Libraries Map Collection.';
+var altText = 'Image of diamond zones location';
 var latLngBounds = L.latLngBounds([[51.57168183170403, -1.3173294067382815], [51.57701619673675, -1.304454803466797]]);
-
 var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
     opacity: 0.8,
     alt: altText,
     interactive: true
 }).addTo(map);
-
+//Adding the base that shows the differnt exits
 var imageUrl = "BaseOver.png";
-var altText = 'Image of Diamond light source';
+var altText = 'Image of Diamond exits';
 var latLngBounds = L.latLngBounds([[51.57168183170403, -1.3173294067382815], [51.57701619673675, -1.304454803466797]]);
-
 var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
     opacity: 0.8,
     alt: altText,
     interactive: true
 }).addTo(map);
+//importing the json file(file is imported completely before the next line runs)
 fetch("beamlines_data.json")
     .then(response => {
         if(response.ok){
@@ -41,15 +36,19 @@ fetch("beamlines_data.json")
     })
     .then(data => {
         var overlayMaps={}
+        //looping over beamlinegroups frome data in the json file
         for(let beamlines_group of data){
             console.log(beamlines_group["name"])
             var emptyGroup=[]
-
+            //looping over beamlines in beamline group to get the beamlines coordinates
             for(let beamline of beamlines_group["beamlines"]){
                 console.log(beamline["position"])
+                //Adding markers to the beamline
                 var marker = L.marker(beamline["position"]).addTo(map);
                 emptyGroup.push(marker)
+                //Adding a popup to the markers
                 marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`).openPopup();}
+        //Adding different coloured markers for each beamline group
         var layers=L.layerGroup(emptyGroup)
         layers.addTo(map)
         overlayMaps[beamlines_group["name"]]=layers
@@ -57,15 +56,19 @@ fetch("beamlines_data.json")
     }
     var layerControl=L.control.layers(null, overlayMaps).addTo(map)
     })
+//Adding a differnt icon for the users location
 var myIcon = L.icon({
     iconUrl: 'location icon.png',
     iconSize: [38, 50],
     iconAnchor: [22, 49],
     popupAnchor: [-3, -35],
 });
+//Updating the location of the user on the map as they move
 map.locate({setView: false, maxZoom: 16, watch: true});
+//showing the accuracy of the users location marker
 var locationAccuracy=L.circle([51.574349, -1.310892], 0).addTo(map);
 var iconMarker= L.marker([51.574349, -1.310892] ,{icon: myIcon}).addTo(map)
+//Adding the marker and accuracy circle to the map
 function onLocationFound(e) {
     var radius = e.accuracy;
 
