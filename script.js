@@ -35,6 +35,8 @@ var colours=["https://github.com/pointhi/leaflet-color-markers/blob/master/img/m
                 "https://github.com/pointhi/leaflet-color-markers/blob/master/img/marker-icon-2x-blue.png?raw=true"]
 
 var beamlinemarkers = {}
+var closest={}
+var beamlinePosition=[]
 
 //importing the json file(file is imported completely before the next line runs)
 fetch("beamlines_data.json")
@@ -66,6 +68,8 @@ fetch("beamlines_data.json")
                 var marker = L.marker(beamline["position"], {icon: greenIcon}).addTo(map);
                 emptyGroup.push(marker)
                 beamlinemarkers[beamline["name"]]=marker 
+                beamlinePosition=beamline["position"]
+                closest[beamline["name"]]=beamlinePosition
 
                 //Adding a popup to the markers and ensuring they stay in view when searched for
                 marker.bindPopup(`<h1>${beamline["name"]}</h1> <p>${beamline["description"]}</p>`, {keepInView: true}).openPopup();}
@@ -143,3 +147,26 @@ searchBox.addEventListener("keydown", e => {
 });
 const mousePosition = new MousePosition({ position: "bottomleft" });
 mousePosition.addTo(map);
+let closestButton = L.control({position: "topleft"})
+let maximum=Number.MAX_SAFE_INTEGER
+var closestBeamline=null
+closestButton.onAdd = function(){
+    let div = L.DomUtil.create("div");
+    div.innerHTML = "<button>Find Closest Marker</button>";
+    div.firstChild.addEventListener('click', function(event){
+        for(let [beamline, beamlinePosition] of Object.entries(closest)){
+            let distance=map.distance(beamlinePosition, iconMarker.getLatLng())
+            if (distance < maximum){
+                Maximum=distance
+                closestBeamline= beamline
+            }else{
+                maximum=maximum
+
+            }
+        }let text= closestBeamline + " is the closest to you"
+        alert(text)
+    })
+    return div;
+
+}
+closestButton.addTo(map)
